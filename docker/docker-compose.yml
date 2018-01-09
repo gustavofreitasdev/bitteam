@@ -1,0 +1,46 @@
+version: '3.1'
+
+services:
+  wordpress: 
+    # Este serviço é responsável por executar o wordpress e todas as suas depedências.
+    depends_on:
+      - db  #wordpress depende do banco de dados (db)
+    image: wordpress:4.7.1 #versão do wordpress, dúvida consultar (https://hub.docker.com/_/wordpress/)
+    restart: always #sempre reseta o serviço
+    volumes:
+      - ./wp-content:/var/www/html/wp-content #pasta que contem plugins e temas
+    environment:
+      WORDPRESS_DB_HOST: db:3306 #seta o banco de dados (db na porta 3306)
+      WORDPRESS_DB_PASSWORD: <<SENHA>> #senha do wordpress
+    ports:
+      - 80:80 #entrada e saída para porta 80 (http)
+      - 443:443 #entrada e saída para a porta 443 (https)
+    networks:
+      - back #conecta a rede 'back'
+  db:
+    # Este serviço é responsável pelo banco de dados (mysql).
+    image: mysql:5.7 #imagem do mysql 
+    restart: always #sempre reseta o serviço
+    volumes:
+       - db_data:/var/lib/mysql #cria um volume externo para mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: <<SENHA>> #senha do mysql
+    networks:
+      - back #conecta a rede back
+  phpmyadmin:
+    # Este serviço é responsável pela interface com banco de dados (phpmyadmin)
+    depends_on:
+      - db #depende do banco de dados
+    image: phpmyadmin/phpmyadmin #imagem e versão do phpmyadmin
+    restart: always #sempre reseta o serviço
+    ports:
+      - 8080:80 #entrada da porta 8080 e saída para 80
+    environment:
+      PMA_HOST: db #seta para o banco de dados
+      MYSQL_ROOT_PASSWORD: <<SENHA>> #senha do banco de dados
+    networks:
+      - back #conecta a rede back
+networks:
+  back: #cria a rede back
+volumes:
+  db_data: #cria o volume para o banco de dados
