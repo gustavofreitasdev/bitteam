@@ -1,3 +1,7 @@
+# Wordpress + MySQL + PhpMyAdmin rápido e fácil com docker
+# Authors - @ndemoor (Nils De Moor) | @gustavofreitasdev (Gustavo F. Silva)
+# Font - https://github.com/ndemoor/docker-wordpress-workflow-demo/blob/master/docker-compose.yml
+
 version: '3.1'
 
 services:
